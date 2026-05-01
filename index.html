@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- =====================================================
+     VERSION MAÎTRE - APPLICATION INSCRIPTION POKER CLUB
+     Il suffit de modifier la zone CONFIGURATION DU CLUB
+     ===================================================== -->
+
+<title>Inscription Poker Club</title>
+
+<!-- Icônes et installation smartphone -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+
+<style>
+  :root {
+    --couleur-principale: #111827;
+    --couleur-secondaire: #b91c1c;
+    --couleur-fond: #f3f4f6;
+    --couleur-carte: #ffffff;
+    --couleur-texte: #111827;
+    --couleur-claire: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--couleur-fond);
+    color: var(--couleur-texte);
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--couleur-principale), var(--couleur-secondaire));
+    color: var(--couleur-claire);
+    padding: 24px 16px;
+    text-align: center;
+  }
+
+  header img {
+    width: 82px;
+    height: 82px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: white;
+    padding: 6px;
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 28px;
+  }
+
+  header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+    opacity: 0.9;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 16px 40px;
+  }
+
+  .carte {
+    background: var(--couleur-carte);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  h2 {
+    margin-top: 0;
+    color: var(--couleur-principale);
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 4px 4px 4px 0;
+  }
+
+  .btn-principal {
+    background: var(--couleur-secondaire);
+    color: white;
+  }
+
+  .btn-secondaire {
+    background: var(--couleur-principale);
+    color: white;
+  }
+
+  .btn-danger {
+    background: #7f1d1d;
+    color: white;
+  }
+
+  .ligne-joueur {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 0;
+  }
+
+  .ligne-joueur:last-child {
+    border-bottom: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e5e7eb;
+    color: #111827;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .stat {
+    background: #f9fafb;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat strong {
+    display: block;
+    font-size: 26px;
+    color: var(--couleur-secondaire);
+  }
+
+  .message {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  footer {
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+    padding: 20px;
+  }
+
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 23px;
+    }
+
+    .ligne-joueur {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 6px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <img id="logoClub" src="icon.png" alt="Logo du club">
+  <h1 id="titreClub">Poker Club</h1>
+  <p id="sousTitreClub">Inscriptions au tournoi</p>
+</header>
+
+<main>
+
+  <section class="carte">
+    <h2>Tournoi</h2>
+    <p><strong>Date :</strong> <span id="dateTournoi"></span></p>
+    <p><strong>Heure :</strong> <span id="heureTournoi"></span></p>
+    <p><strong>Lieu :</strong> <span id="lieuTournoi"></span></p>
+    <p><strong>Places maximum :</strong> <span id="placesMax"></span></p>
+  </section>
+
+  <section class="carte">
+    <h2>Inscrire un joueur</h2>
+    <label for="nomJoueur">Nom ou pseudo</label>
+    <input id="nomJoueur" type="text" placeholder="Exemple : Claudius">
+
+    <label for="commentaireJoueur">Commentaire facultatif</label>
+    <input id="commentaireJoueur" type="text" placeholder="Exemple : repas, retard, invité...">
+
+    <button class="btn-principal" onclick="inscrireJoueur()">Inscrire</button>
+    <p class="message" id="message"></p>
+  </section>
+
+  <section class="carte">
+    <h2>État des inscriptions</h2>
+    <div class="stats">
+      <div class="stat">
+        <strong id="nombreInscrits">0</strong>
+        inscrits
+      </div>
+      <div class="stat">
+        <strong id="nombrePlacesRestantes">0</strong>
+        places restantes
+      </div>
+    </div>
+  </section>
+
+  <section class="carte">
+    <h2>Liste des joueurs</h2>
+    <div id="listeJoueurs"></div>
+  </section>
+
+  <section class="carte">
+    <h2>Administration</h2>
+    <label for="codeAdmin">Code admin</label>
+    <input id="codeAdmin" type="password" placeholder="Code administrateur">
+
+    <button class="btn-secondaire" onclick="exporterListe()">Exporter la liste</button>
+    <button class="btn-danger" onclick="viderListe()">Vider la liste</button>
+  </section>
+
+</main>
+
+<footer>
+  Application d'inscription - Version maître Poker Club
+</footer>
+
+<script>
+/* =====================================================
+   CONFIGURATION DU CLUB
+   C'EST ICI QU'IL FAUT MODIFIER POUR CHAQUE CLUB
+   ===================================================== */
+
+const CONFIG_CLUB = {
+  nomClub: "NOM DU CLUB",
+  sousTitre: "Inscriptions au tournoi",
+  dateTournoi: "Vendredi 13 juin 2026",
+  heureTournoi: "21h00",
+  lieuTournoi: "Salle du club",
+  placesMaximum: 64,
+  codeAdmin: "club2026",
+
+  // Important : changer ce nom pour chaque club
+  // Exemple : joueurs_pexiora, joueurs_durfort, joueurs_bram
+  stockageJoueurs: "joueurs_nom_du_club",
+
+  // Couleurs du club
+  couleurPrincipale: "#111827",
+  couleurSecondaire: "#b91c1c"
+};
+
+/* =====================================================
+   INITIALISATION
+   ===================================================== */
+
+document.title = CONFIG_CLUB.nomClub + " - Inscription";
+document.getElementById("titreClub").textContent = CONFIG_CLUB.nomClub;
+document.getElementById("sousTitreClub").textContent = CONFIG_CLUB.sousTitre;
+document.getElementById("dateTournoi").textContent = CONFIG_CLUB.dateTournoi;
+document.getElementById("heureTournoi").textContent = CONFIG_CLUB.heureTournoi;
+document.getElementById("lieuTournoi").textContent = CONFIG_CLUB.lieuTournoi;
+document.getElementById("placesMax").textContent = CONFIG_CLUB.placesMaximum;
+
+document.documentElement.style.setProperty("--couleur-principale", CONFIG_CLUB.couleurPrincipale);
+document.documentElement.style.setProperty("--couleur-secondaire", CONFIG_CLUB.couleurSecondaire);
+
+let joueurs = chargerJoueurs();
+afficherJoueurs();
+
+/* =====================================================
+   FONCTIONS PRINCIPALES
+   ===================================================== */
+
+function chargerJoueurs() {
+  const donnees = localStorage.getItem(CONFIG_CLUB.stockageJoueurs);
+  return donnees ? JSON.parse(donnees) : [];
+}
+
+function sauvegarderJoueurs() {
+  localStorage.setItem(CONFIG_CLUB.stockageJoueurs, JSON.stringify(joueurs));
+}
+
+function inscrireJoueur() {
+  const nom = document.getElementById("nomJoueur").value.trim();
+  const commentaire = document.getElementById("commentaireJoueur").value.trim();
+  const message = document.getElementById("message");
+
+  if (!nom) {
+    message.textContent = "Indique le nom ou le pseudo du joueur.";
+    message.style.color = "#b91c1c";
+    return;
+  }
+
+  if (joueurs.length >= CONFIG_CLUB.placesMaximum) {
+    message.textContent = "Le tournoi est complet.";
+    message.style.color = "#b91c1c";
+    return;
+  }
+
+  const dejaInscrit = joueurs.some(joueur => joueur.nom.toLowerCase() === nom.toLowerCase());
+  if (dejaInscrit) {
+    message.textContent = "Ce joueur est déjà inscrit.";
+    message.style.color = "#b91c1c";
+    return;
+  }
+
+  joueurs.push({
+    nom: nom,
+    commentaire: commentaire,
+    dateInscription: new Date().toLocaleString("fr-FR")
+  });
+
+  sauvegarderJoueurs();
+  afficherJoueurs();
+
+  document.getElementById("nomJoueur").value = "";
+  document.getElementById("commentaireJoueur").value = "";
+
+  message.textContent = "Joueur inscrit avec succès.";
+  message.style.color = "#166534";
+}
+
+function desinscrireJoueur(index) {
+  if (!verifierCodeAdmin()) return;
+
+  joueurs.splice(index, 1);
+  sauvegarderJoueurs();
+  afficherJoueurs();
+}
+
+function afficherJoueurs() {
+  const liste = document.getElementById("listeJoueurs");
+  const nombreInscrits = document.getElementById("nombreInscrits");
+  const nombrePlacesRestantes = document.getElementById("nombrePlacesRestantes");
+
+  nombreInscrits.textContent = joueurs.length;
+  nombrePlacesRestantes.textContent = CONFIG_CLUB.placesMaximum - joueurs.length;
+
+  if (joueurs.length === 0) {
+    liste.innerHTML = "<p>Aucun joueur inscrit pour le moment.</p>";
+    return;
+  }
+
+  liste.innerHTML = joueurs.map((joueur, index) => `
+    <div class="ligne-joueur">
+      <div>
+        <strong>${index + 1}. ${echapperHTML(joueur.nom)}</strong>
+        ${joueur.commentaire ? `<br><span class="badge">${echapperHTML(joueur.commentaire)}</span>` : ""}
+        <br><small>Inscrit le ${joueur.dateInscription}</small>
+      </div>
+      <button class="btn-danger" onclick="desinscrireJoueur(${index})">Désinscrire</button>
+    </div>
+  `).join("");
+}
+
+function verifierCodeAdmin() {
+  const code = document.getElementById("codeAdmin").value;
+  const message = document.getElementById("message");
+
+  if (code !== CONFIG_CLUB.codeAdmin) {
+    message.textContent = "Code admin incorrect.";
+    message.style.color = "#b91c1c";
+    return false;
+  }
+  return true;
+}
+
+function viderListe() {
+  if (!verifierCodeAdmin()) return;
+
+  const confirmation = confirm("Voulez-vous vraiment vider toute la liste des inscrits ?");
+  if (!confirmation) return;
+
+  joueurs = [];
+  sauvegarderJoueurs();
+  afficherJoueurs();
+
+  const message = document.getElementById("message");
+  message.textContent = "Liste vidée.";
+  message.style.color = "#166534";
+}
+
+function exporterListe() {
+  if (!verifierCodeAdmin()) return;
+
+  let contenu = `${CONFIG_CLUB.nomClub}\n`;
+  contenu += `Tournoi du ${CONFIG_CLUB.dateTournoi} à ${CONFIG_CLUB.heureTournoi}\n`;
+  contenu += `Lieu : ${CONFIG_CLUB.lieuTournoi}\n\n`;
+  contenu += `Liste des inscrits :\n\n`;
+
+  joueurs.forEach((joueur, index) => {
+    contenu += `${index + 1}. ${joueur.nom}`;
+    if (joueur.commentaire) contenu += ` - ${joueur.commentaire}`;
+    contenu += `\n`;
+  });
+
+  const fichier = new Blob([contenu], { type: "text/plain" });
+  const lien = document.createElement("a");
+  lien.href = URL.createObjectURL(fichier);
+  lien.download = "liste_inscrits_" + CONFIG_CLUB.nomClub.toLowerCase().replaceAll(" ", "_") + ".txt";
+  lien.click();
+}
+
+function echapperHTML(texte) {
+  return texte
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+</script>
+
+</body>
+</html>
