@@ -373,14 +373,11 @@ function inscrireJoueur() {
   message.style.color = "#166534";
 }
 
-function desinscrireJoueur(index) {
+function desinscrireJoueur(id) {
   if (!verifierCodeAdmin()) return;
 
-  joueurs.splice(index, 1);
-  sauvegarderJoueurs();
-  afficherJoueurs();
+  db.ref(CHEMIN_DB + "/" + id).remove();
 }
-
 function afficherJoueurs() {
   const liste = document.getElementById("listeJoueurs");
   const nombreInscrits = document.getElementById("nombreInscrits");
@@ -401,10 +398,11 @@ function afficherJoueurs() {
         ${joueur.commentaire ? `<br><span class="badge">${echapperHTML(joueur.commentaire)}</span>` : ""}
         <br><small>Inscrit le ${joueur.dateInscription}</small>
       </div>
-      <button class="btn-danger" onclick="desinscrireJoueur(${index})">Désinscrire</button>
+      <button class="btn-danger" onclick="desinscrireJoueur('${joueur.id}')">Désinscrire</button>
     </div>
   `).join("");
 }
+
 
 function verifierCodeAdmin() {
   const code = document.getElementById("codeAdmin").value;
